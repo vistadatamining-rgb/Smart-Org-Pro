@@ -1,0 +1,9 @@
+EmployeeID,ManagerID,Name,Title,Department,PhotoURL,Performance,Sales,SalesTarget,SalesPrevious,Profit
+1,,Sara Rahimi,CEO,Executive,,92,980000,1000000,900000,210000
+2,1,Ali Karimi,CFO,Finance,,88,640000,700000,610000,150000
+3,1,Mina Ahmadi,COO,Operations,,81,720000,700000,650000,170000
+4,1,Reza Hosseini,CTO,Technology,,95,860000,800000,790000,240000
+5,2,Neda Safari,Finance Manager,Finance,,74,310000,350000,330000,70000
+6,3,Omid Tavakoli,Operations Manager,Operations,,67,280000,350000,300000,52000
+7,4,Leila Mohseni,Engineering Lead,Technology,,90,450000,420000,400000,125000
+8,4,Hamed Nouri,Data Lead,Technology,,86,390000,380000,350000,98000

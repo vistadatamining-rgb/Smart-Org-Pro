@@ -1,0 +1,522 @@
+.sop-root {
+  font-family: 'Segoe UI', -apple-system, Tahoma, sans-serif;
+  background: var(--bg-0);
+  color: var(--text-0);
+}
+
+.sop-stage { position: relative; }
+.sop-connlayer { position: absolute; top: 0; left: 0; z-index: 1; }
+.sop-nodes { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; }
+
+.sop-node {
+  position: absolute;
+  text-align: center;
+  z-index: 2;
+  transition: left .4s cubic-bezier(.2,.8,.2,1), top .4s cubic-bezier(.2,.8,.2,1), opacity .3s, filter .3s;
+}
+.sop-node:hover { z-index: 100; }
+.sop-node.dimmed { opacity: .18; filter: grayscale(60%); }
+
+.sop-card {
+  position: relative;
+  background: linear-gradient(180deg, var(--card), var(--bg-1));
+  border: 1px solid var(--card-border);
+  border-radius: 15px;
+  padding: 14px 10px 12px;
+  cursor: pointer;
+  transition: transform .3s, box-shadow .3s, border-color .3s;
+}
+.sop-card:hover {
+  border-color: var(--accent-b);
+  box-shadow: 0 12px 28px -10px var(--shadow);
+}
+
+.sop-badge { position: absolute; top: 8px; right: 10px; font-size: 13px; }
+.sop-avatar {
+  width: 56px; height: 56px; border-radius: 50%; padding: 2.5px; margin: 0 auto 8px;
+  background: conic-gradient(from 180deg, var(--accent-a), var(--accent-b), var(--accent-c), var(--accent-a));
+}
+.sop-avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--bg-1); display: block; }
+.sop-name { font-size: 12.5px; font-weight: 700; margin-bottom: 1px; }
+.sop-role { font-size: 10.5px; color: var(--accent-b); }
+.sop-dept { font-size: 9.5px; color: var(--text-2); }
+.sop-mini-kpi { margin-top: 8px; height: 4px; border-radius: 2px; background: var(--line); overflow: hidden; }
+.sop-mini-kpi span { display: block; height: 100%; border-radius: 2px; background: linear-gradient(90deg, var(--bad), var(--warn), var(--good)); }
+
+.sop-toggle {
+  position: absolute; left: 50%; bottom: -11px; transform: translateX(-50%);
+  width: 22px; height: 22px; border-radius: 50%; background: var(--accent-b); color: #fff;
+  display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;
+  cursor: pointer; box-shadow: 0 3px 8px -1px var(--shadow), 0 0 0 3px var(--bg-0); z-index: 5;
+  user-select: none;
+}
+
+.sop-panel {
+  position: absolute; top: 0; left: calc(100% + 10px); width: 240px;
+  background: var(--panel-bg); backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid var(--card-border); border-radius: 16px; padding: 16px; text-align: left;
+  opacity: 0; transform: scale(.92) translateX(-6px); transform-origin: left center; pointer-events: none;
+  transition: opacity .2s, transform .2s; z-index: 600; box-shadow: 0 18px 45px -12px var(--shadow);
+}
+/* Scoped to hovering the CARD ITSELF (.sop-cardslot), not the whole node — the old
+   `.sop-node:hover` rule also fired while hovering the KPI Performance area below the
+   card (same .sop-node parent), which is what made this panel pop up over/behind the
+   KPI area's own tooltip. The sibling combinator (~) only matches because .sop-cardslot
+   is rendered before .sop-panel in the DOM for every card style. */
+.sop-cardslot:hover ~ .sop-panel { opacity: 1; transform: scale(1) translateX(0); pointer-events: auto; }
+
+/* Edge-of-stage flips (set in JS based on the node's position vs. the stage's bounding
+   box) — without these, a node near the right or bottom edge has its panel clipped by
+   the scroll viewport, which is what cut off "Overall Performance" in the report. */
+.sop-panel.sop-panel-flip-x {
+  left: auto; right: calc(100% + 10px);
+  transform-origin: right center;
+  transform: scale(.92) translateX(6px);
+}
+.sop-cardslot:hover ~ .sop-panel.sop-panel-flip-x { transform: scale(1) translateX(0); }
+.sop-panel.sop-panel-flip-y { top: auto; bottom: 0; }
+
+.sop-panel-head { display: flex; align-items: center; gap: 9px; margin-bottom: 10px; }
+.sop-panel-head img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; }
+.sop-nm { font-size: 13.5px; font-weight: 700; }
+.sop-rl { font-size: 10.5px; color: var(--accent-b); }
+
+.sop-info-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 5px 8px; font-size: 10px; color: var(--text-1);
+  margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--card-border);
+}
+.sop-info-grid b { color: var(--text-0); font-weight: 600; }
+
+.sop-perf-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; }
+.sop-lbl { font-size: 10.5px; color: var(--text-1); }
+.sop-val { font-size: 15px; font-weight: 700; color: var(--good); }
+
+.sop-bar { height: 8px; border-radius: 5px; background: var(--line); overflow: hidden; margin-bottom: 12px; }
+.sop-bar span { display: block; height: 100%; border-radius: 5px; background: linear-gradient(90deg, var(--bad), var(--warn), var(--good)); }
+.sop-bar.sop-neon { box-shadow: inset 0 0 0 1px var(--card-border); }
+.sop-bar.sop-neon span { background: var(--accent-b); box-shadow: 0 0 10px 1px var(--accent-b); }
+
+.sop-liquid { position: relative; width: 100%; height: 32px; border-radius: 8px; background: var(--line); overflow: hidden; margin-bottom: 12px; }
+.sop-liquid-fill {
+  position: absolute; bottom: 0; left: 0; width: 100%;
+  background: linear-gradient(180deg, var(--accent-b), var(--good)); background-size: 200% 200%;
+  animation: sopLiquidMove 3s ease-in-out infinite;
+}
+.sop-liquid-label { position: relative; z-index: 2; text-align: center; line-height: 32px; font-size: 11.5px; font-weight: 700; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.5); }
+@keyframes sopLiquidMove { 0%, 100% { background-position: 0% 0%; } 50% { background-position: 100% 100%; } }
+
+.sop-segmented { display: flex; gap: 2.5px; height: 10px; margin-bottom: 12px; }
+.sop-segmented span { flex: 1; border-radius: 2px; background: var(--line); }
+.sop-segmented span.on { background: linear-gradient(180deg, var(--accent-b), var(--good)); }
+
+.sop-ring-wrap { display: flex; justify-content: center; margin-bottom: 10px; }
+.sop-ring { width: 66px; height: 66px; }
+
+.sop-kpi-mini { display: flex; flex-direction: column; gap: 6px; }
+.sop-kpi-mini .row { display: flex; align-items: center; gap: 7px; font-size: 10px; color: var(--text-1); }
+.sop-kpi-mini .row .kpi-label { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sop-kpi-mini .row .kpi-val { flex: 0 0 auto; min-width: 30px; text-align: right; font-size: 10px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.sop-kpi-mini .row .track { flex: 0 0 40%; height: 5px; border-radius: 3px; background: var(--line); overflow: hidden; }
+.sop-kpi-mini .row .track span { display: block; height: 100%; border-radius: 3px; }
+
+/* Free-version badge (bottom-right) + hover popup */
+.sop-license-badge {
+  position: absolute; right: 10px; bottom: 10px; z-index: 500;
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(0,0,0,.6); color: #fff; font-size: 11px; padding: 5px 12px;
+  border-radius: 20px; opacity: 0; pointer-events: none; transition: opacity .3s; cursor: default;
+}
+.sop-license-badge.show { opacity: 1; pointer-events: auto; }
+.sop-badge-text { line-height: 1; white-space: nowrap; }
+.sop-license-popup {
+  position: absolute; right: 10px; bottom: 42px; z-index: 600;
+  width: 240px; max-width: calc(100% - 20px); max-height: calc(100% - 56px); overflow-y: auto;
+  background: rgba(20,22,30,.96); color: #eef0f6; border-radius: 10px; padding: 10px 12px;
+  box-shadow: 0 10px 28px rgba(0,0,0,.45); font-size: 11px; line-height: 1.5;
+  opacity: 0; visibility: hidden; transition: opacity .15s;
+}
+.sop-license-popup.open { opacity: 1; visibility: visible; }
+.sop-popup-title { font-weight: 700; font-size: 12px; margin-bottom: 2px; }
+.sop-popup-sub { opacity: .75; margin-bottom: 4px; }
+.sop-popup-list { margin: 0 0 6px 0; padding-left: 16px; }
+.sop-popup-foot { opacity: .75; border-top: 1px solid rgba(255,255,255,.15); padding-top: 6px; }
+/* Product name watermark (bottom-left), only while unlicensed */
+.sop-watermark {
+  position: absolute; left: 10px; bottom: 10px; z-index: 400; font-size: 12px; font-weight: 700;
+  color: rgba(120,120,120,.2); pointer-events: none; display: none; user-select: none;
+}
+.sop-watermark.show { display: block; }
+
+/* License-expired overlay: centered lock at 70% opacity + tiled watermark text */
+.sop-license-overlay {
+  position: absolute; inset: 0; z-index: 1000;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; gap: 10px; padding: 24px;
+  background-color: rgba(20, 22, 30, 0.35);
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='160'><text x='-10' y='100' font-size='24' fill='rgba(255,255,255,0.14)' transform='rotate(-28 150 70)' font-family='Segoe UI, sans-serif' font-weight='700'>SMART ORG PRO</text></svg>");
+  background-repeat: repeat;
+  backdrop-filter: blur(2px);
+  opacity: 0; pointer-events: none; transition: opacity .3s;
+}
+.sop-license-overlay.show { opacity: 1; }
+.sop-license-icon { opacity: .7; color: #fff; margin-bottom: 4px; filter: drop-shadow(0 4px 10px rgba(0,0,0,.4)); }
+.sop-license-title { font-size: 16px; font-weight: 700; color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,.5); }
+.sop-license-sub { font-size: 12px; color: #dfe1e8; max-width: 320px; text-shadow: 0 1px 4px rgba(0,0,0,.5); }
+
+.sop-stage.sop-locked { filter: grayscale(35%); }
+
+/* Restricted (trial expired / no valid license): kill every CSS animation
+   and transition so the "many features are disabled" requirement is real,
+   not just visual — this also removes the last easy client-side toggle
+   (re-enabling a CSS class) from restoring the fancy connector/bar motion,
+   since the *style choice itself* is forced server-blind to defaults in
+   visual.ts, not just hidden via CSS. */
+.sop-restricted, .sop-restricted * {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Pill Card style */
+.sop-pill { display: flex; align-items: center; cursor: pointer; transition: transform .2s; }
+.sop-pill:hover {
+ }
+.sop-pill-avatar {
+  width: 62px; height: 62px; border-radius: 50%; border: 4px solid #999; overflow: hidden;
+  position: relative; z-index: 2; flex-shrink: 0; background: #fff;
+  box-shadow: 0 6px 14px -4px rgba(0,0,0,.25);
+}
+.sop-pill-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.sop-pill-info { flex: 1; margin-left: -22px; border-radius: 20px; overflow: hidden; box-shadow: 0 8px 18px -6px rgba(0,0,0,.22); }
+.sop-pill-top { color: #fff; font-weight: 700; font-size: 11.5px; padding: 8px 12px 8px 32px; letter-spacing: .02em; }
+.sop-pill-bottom { background: #26262c; padding: 5px 12px 8px 32px; }
+.sop-pill-role { font-weight: 700; font-size: 10px; margin-bottom: 1px; }
+.sop-pill-dept { color: #9a9ba3; font-size: 8.5px; }
+
+/* Minimal Flat */
+.sop-minimal {
+  position: relative; background: var(--card); border: 1px solid var(--card-border);
+  border-left: 4px solid var(--accent-a); border-radius: 8px; padding: 12px; cursor: pointer;
+  transition: transform .2s, box-shadow .2s;
+}
+.sop-minimal:hover {
+ box-shadow: 0 10px 24px -10px var(--shadow); }
+.sop-minimal-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+.sop-minimal-photo { width: 40px; height: 40px; border-radius: 8px; overflow: hidden; flex-shrink: 0; }
+.sop-minimal-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.sop-minimal-text .sop-name { font-size: 12px; }
+.sop-minimal-text .sop-role { font-size: 10px; }
+
+/* Ribbon Badge */
+.sop-ribbon-card {
+  position: relative; background: linear-gradient(180deg, var(--card), var(--bg-1));
+  border: 1px solid var(--card-border); border-radius: 14px; padding: 20px 12px 12px; text-align: center;
+  cursor: pointer; transition: transform .2s, box-shadow .2s; overflow: visible;
+}
+.sop-ribbon-card:hover {
+ box-shadow: 0 12px 28px -10px var(--shadow); }
+.sop-ribbon {
+  position: absolute; top: -9px; left: 14px; color: #fff; font-size: 9px; font-weight: 700;
+  padding: 4px 10px; border-radius: 20px; box-shadow: 0 4px 10px -2px var(--shadow);
+}
+
+/* Outline */
+.sop-outline {
+  position: relative; background: transparent; border: 2px solid var(--accent-a); border-radius: 14px;
+  padding: 14px 10px; text-align: center; cursor: pointer; transition: transform .2s, background .2s;
+}
+.sop-outline:hover {
+ background: var(--panel-bg); }
+.sop-outline-avatar { width: 52px; height: 52px; border-radius: 50%; border: 2px solid; margin: 0 auto 8px; overflow: hidden; }
+.sop-outline-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* Photo Background */
+.sop-photobg {
+  position: relative; width: 100%; height: 100%; border-radius: 14px; overflow: hidden; cursor: pointer;
+  box-shadow: 0 10px 24px -10px var(--shadow); transition: transform .2s;
+}
+.sop-photobg:hover {
+ }
+.sop-photobg-img { position: absolute; inset: 0; background-size: cover; background-position: center; }
+.sop-photobg-overlay { position: absolute; left: 0; right: 0; bottom: 0; padding: 24px 10px 10px; text-align: center; }
+.sop-photobg-overlay .sop-name { color: #fff; font-size: 12.5px; }
+.sop-photobg-overlay .sop-role { color: #e8e8ef; font-size: 10px; }
+
+/* Neumorphic */
+.sop-neumorph {
+  position: relative; background: var(--bg-0); border-radius: 18px; padding: 16px 10px; text-align: center;
+  cursor: pointer; transition: transform .2s;
+  box-shadow: 7px 7px 14px rgba(0,0,0,.25), -7px -7px 14px rgba(255,255,255,.04);
+}
+.sop-neumorph:hover {
+ }
+.sop-neumorph-avatar {
+  width: 56px; height: 56px; border-radius: 50%; margin: 0 auto 8px; overflow: hidden;
+  box-shadow: inset 3px 3px 6px rgba(0,0,0,.3), inset -3px -3px 6px rgba(255,255,255,.05);
+}
+.sop-neumorph-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ===========================================================================
+   Zoom viewport
+   The host element no longer scrolls: .sop-scroll does. That keeps the legend
+   and the zoom buttons anchored to the visual instead of scrolling/scaling away
+   with the chart. .sop-zoomwrap carries the *laid out* (scaled) size while
+   .sop-stage carries the transform, so scrollbars match a zoomed-in chart.
+   =========================================================================== */
+.sop-scroll { position: absolute; inset: 0; overflow: auto; }
+.sop-zoomwrap { position: relative; }
+.sop-stage { transform-origin: 0 0; }
+
+.sop-zoomctrl {
+  position: absolute; right: 10px; bottom: 10px; z-index: 450;
+  display: none; align-items: center; gap: 2px;
+  background: rgba(0,0,0,.55); border-radius: 20px; padding: 3px 6px;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px -4px rgba(0,0,0,.5);
+}
+.sop-zoomctrl.show { display: flex; }
+.sop-zoom-btn {
+  width: 22px; height: 22px; border: 0; border-radius: 50%; cursor: pointer;
+  background: rgba(255,255,255,.12); color: #fff;
+  font-size: 13px; font-weight: 700; line-height: 1; padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: inherit; transition: background .15s;
+}
+.sop-zoom-btn:hover { background: rgba(255,255,255,.28); }
+.sop-zoom-reset { font-size: 12px; }
+.sop-zoom-label {
+  color: #fff; font-size: 10.5px; font-weight: 600; min-width: 36px;
+  text-align: center; font-variant-numeric: tabular-nums; user-select: none;
+}
+
+/* ===========================================================================
+   Department legend
+   =========================================================================== */
+.sop-legend {
+  position: absolute; z-index: 400; display: none; box-sizing: border-box;
+  background: var(--panel-bg); backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  padding: 10px 12px; overflow: auto;
+}
+.sop-legend.show { display: block; }
+.sop-legend.pos-right  { top: 0; right: 0; bottom: 0; border-left: 1px solid var(--card-border); }
+.sop-legend.pos-left   { top: 0; left: 0; bottom: 0; border-right: 1px solid var(--card-border); }
+.sop-legend.pos-top    { top: 0; left: 0; right: 0; border-bottom: 1px solid var(--card-border); max-height: 40%; }
+.sop-legend.pos-bottom { bottom: 0; left: 0; right: 0; border-top: 1px solid var(--card-border); max-height: 40%; }
+
+.sop-legend-title {
+  font-size: 1.05em; font-weight: 700; color: var(--text-0);
+  margin-bottom: 8px; letter-spacing: .02em;
+}
+.sop-legend-items { display: flex; flex-direction: column; gap: 6px; }
+/* Horizontal placements wrap the swatches into a strip instead of a column. */
+.sop-legend.pos-top .sop-legend-items,
+.sop-legend.pos-bottom .sop-legend-items { flex-direction: row; flex-wrap: wrap; gap: 6px 16px; }
+.sop-legend.pos-top .sop-legend-title,
+.sop-legend.pos-bottom .sop-legend-title { margin-bottom: 6px; }
+
+.sop-legend-item { display: flex; align-items: center; gap: 7px; min-width: 0; line-height: 1.2; }
+.sop-legend-dot {
+  flex: 0 0 auto; width: 11px; height: 11px; border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.18) inset;
+}
+.sop-legend-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ===========================================================================
+   KPI Performance area — pinned under each person's card. Replaces the older
+   always-expanded data card entirely (per the KPI Performance spec). Two
+   states, toggled by clicking anywhere in the area (JS adds/removes
+   .expanded/.collapsed and re-renders):
+     .collapsed — compact "Name    Value" rows only, no bars
+     .expanded  — full progress bar (5 selectable styles, each with a target
+                  marker) + hover tooltip (5 selectable styles) per KPI
+   --dc-accent is set inline (department color, or the row's own status color);
+   every style below reads it from there so switching container style never
+   needs the TS to rewrite a pile of properties.
+   =========================================================================== */
+.sop-cardslot { position: relative; }
+
+.sop-kpiperf {
+  position: relative; box-sizing: border-box; margin-top: 7px; padding: 8px 9px;
+  border: 1px solid var(--card-border); text-align: left;
+  color: var(--text-0); cursor: pointer; user-select: none;
+  transition: box-shadow .25s, transform .25s, border-color .25s;
+}
+.sop-node:hover .sop-kpiperf { transform: translateY(-1px); }
+.sop-kpiperf.has-accent-edge { border-top-width: 2px; border-top-style: solid; }
+
+/* Connector notch tying the area back to the card above it. */
+.sop-kp-arrow {
+  position: absolute; top: -5px; left: 50%; width: 10px; height: 10px;
+  transform: translateX(-50%) rotate(45deg);
+  border-left: 1px solid var(--card-border); border-top: 1px solid var(--card-border);
+  border-radius: 2px 0 0 0; z-index: 1;
+}
+
+/* Expand/collapse indicator — the only visible cue that the KPI area is clickable
+   and which state it's in. Bottom-right corner so it never sits over the numbers. */
+.sop-kp-chevron {
+  position: absolute; right: 6px; bottom: 4px; z-index: 4;
+  font-size: 9px; line-height: 1; color: var(--text-2); opacity: .7;
+  transition: opacity .15s, color .15s;
+}
+.sop-kpiperf:hover .sop-kp-chevron { opacity: 1; color: var(--dc-accent); }
+
+.sop-kp-body { position: relative; z-index: 2; display: flex; flex-direction: column; gap: 6px; }
+
+/* --- Collapsed rows: name + value only ------------------------------------ */
+.sop-kp-row-collapsed {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.sop-kp-row-collapsed .kp-name {
+  color: var(--text-1); font-size: .92em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.sop-kp-row-collapsed .kp-value { font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* --- Expanded rows: head (name + status) / bar / actual-target foot ------- */
+.sop-kp-row-expanded { position: relative; display: flex; flex-direction: column; gap: 5px; padding: 2px 0; }
+.kp-row-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.kp-row-head .kp-name { font-weight: 700; font-size: .95em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.kp-ach-wrap { display: flex; align-items: center; gap: 4px; font-weight: 800; font-variant-numeric: tabular-nums; flex: 0 0 auto; }
+.kp-dot { width: 6px; height: 6px; border-radius: 50%; flex: 0 0 auto; }
+.kp-row-foot {
+  display: flex; justify-content: space-between; gap: 8px;
+  font-size: .78em; color: var(--text-1); font-variant-numeric: tabular-nums;
+}
+
+/* --- Progress bar styles (expanded state) --------------------------------- */
+/* Style 0: Classic Horizontal */
+.sop-kp-bar { position: relative; border-radius: 4px; background: rgba(127,127,140,.22); overflow: visible; }
+.sop-kpbar-classic, .sop-kpbar-marker, .sop-kpbar-gradient { overflow: hidden; }
+.sop-kpbar-classic .fill, .sop-kpbar-marker .fill, .sop-kpbar-gradient .fill {
+  display: block; height: 100%; border-radius: 4px; transition: width .5s cubic-bezier(.2,.8,.2,1);
+}
+/* Target marker: a small vertical line + tick, sitting ON TOP of the track so it reads
+   as "here is the goal" distinctly from the fill itself, per the spec's explicit
+   "actual must be visually distinguishable from target" requirement. */
+.sop-kp-bar .target-marker {
+  position: absolute; top: -3px; bottom: -3px; width: 2px;
+  background: var(--text-0); opacity: .85; transform: translateX(-1px); z-index: 3;
+}
+.sop-kp-bar .target-marker::after {
+  content: ""; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%);
+  width: 0; height: 0; border-left: 3px solid transparent; border-right: 3px solid transparent;
+  border-top: 4px solid var(--text-0); opacity: .85;
+}
+/* Style 2: Modern Target Marker — thicker bar, more prominent marker */
+.sop-kpbar-marker { height: 100% !important; }
+.sop-kpbar-marker .target-marker { width: 3px; box-shadow: 0 0 4px rgba(0,0,0,.4); }
+/* Style 4: Premium Gradient — fill already carries a gradient (set inline); track gets
+   a subtle inner shadow for depth. */
+.sop-kpbar-gradient { box-shadow: inset 0 1px 3px rgba(0,0,0,.25); }
+
+/* Style 1: Segmented */
+.sop-kp-bar.sop-kpbar-segmented {
+  display: flex; gap: 2px; background: transparent; border-radius: 0; align-items: stretch;
+}
+.sop-kpbar-segmented span { flex: 1; border-radius: 2px; background: rgba(127,127,140,.30); transition: background .35s; position: relative; }
+.sop-kpbar-segmented span.target-seg::after {
+  content: ""; position: absolute; top: -3px; bottom: -3px; right: -1px; width: 2px; background: var(--text-0); opacity: .85;
+}
+
+/* --- KPI hover tooltip (5 styles) ------------------------------------------ */
+.sop-kp-tooltip {
+  position: absolute; top: -8px; left: calc(100% + 10px); width: 200px; z-index: 500;
+  padding: 10px 12px; border-radius: 10px; font-size: 11px;
+  opacity: 0; pointer-events: none; transform: scale(.92) translateX(-6px);
+  transition: opacity .18s, transform .18s; transform-origin: left center;
+}
+.sop-kp-row-expanded:hover .sop-kp-tooltip { opacity: 1; transform: scale(1) translateX(0); pointer-events: auto; }
+.sop-kp-tooltip.flip-x { left: auto; right: calc(100% + 10px); transform-origin: right center; }
+.sop-kp-tooltip.flip-y { top: auto; bottom: -8px; }
+
+.tip-head { font-weight: 800; font-size: .92em; letter-spacing: .03em; margin-bottom: 7px; }
+.tip-body { display: flex; flex-direction: column; gap: 4px; }
+.tip-row { display: flex; justify-content: space-between; gap: 10px; }
+.tip-label { color: var(--text-1); }
+.tip-value { font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* Tooltip style 0: Minimal */
+.tip-minimal { background: var(--panel-bg); border: 1px solid var(--card-border); backdrop-filter: blur(10px); }
+.tip-minimal .tip-head { color: var(--text-1); font-weight: 600; }
+
+/* Tooltip style 1: Executive Card */
+.tip-executive {
+  background: #fff; color: #1a1a1a; border-radius: 6px;
+  box-shadow: 0 14px 30px -10px rgba(0,0,0,.4);
+  border-top: 3px solid var(--tip-accent);
+}
+.tip-executive .tip-head { color: #1a1a1a; }
+.tip-executive .tip-label { color: #6b6b6b; }
+.tip-executive .tip-value { color: #1a1a1a; }
+
+/* Tooltip style 2: Modern Dark */
+.tip-modernDark {
+  background: #0d1017; border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 16px 34px -14px rgba(0,0,0,.7);
+}
+.tip-modernDark .tip-head { color: var(--tip-accent); }
+
+/* Tooltip style 3: Glass / Premium */
+.tip-glass {
+  background: rgba(20,24,34,.68); backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 18px 36px -16px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.12);
+}
+.tip-glass .tip-head { background: linear-gradient(90deg, var(--tip-accent), transparent); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+/* Tooltip style 4: Detailed Analytics — same rows, denser/wider, small accent bar per row */
+.tip-detailed { width: 220px; background: #12151d; border: 1px solid var(--tip-accent); }
+.tip-detailed .tip-row { border-left: 2px solid var(--tip-accent); padding-left: 6px; }
+.tip-detailed .tip-head { color: var(--tip-accent); }
+
+/* --- Container styles (background/border of the whole area) --------------- */
+.sop-kpiperf.st-glass {
+  backdrop-filter: blur(16px) saturate(150%); -webkit-backdrop-filter: blur(16px) saturate(150%);
+  border-color: rgba(255,255,255,.14);
+  box-shadow: 0 14px 30px -14px var(--shadow), inset 0 1px 0 rgba(255,255,255,.12);
+}
+.sop-kpiperf.st-glass .sop-kp-arrow { border-color: rgba(255,255,255,.14); }
+
+.sop-kpiperf.st-neon { border-width: 1px; border-style: solid; }
+.sop-kpiperf.st-neon .sop-kp-arrow { border-color: var(--dc-accent); }
+.sop-node:hover .sop-kpiperf.st-neon {
+  box-shadow: 0 0 0 1px var(--dc-accent), 0 0 22px -1px var(--dc-accent), 0 12px 26px -12px var(--shadow);
+}
+
+.sop-kpiperf.st-gradient { border-color: transparent; box-shadow: 0 14px 30px -14px var(--shadow); }
+.sop-kpiperf.st-gradient .sop-kp-arrow { border-color: transparent; }
+.sop-kpiperf.st-gradient .kp-value,
+.sop-kpiperf.st-gradient .kp-name { color: #fff !important; text-shadow: 0 1px 4px rgba(0,0,0,.45); }
+
+.sop-kpiperf.st-sidebar {
+  border-left-width: 4px; border-left-style: solid;
+  border-radius: 4px 12px 12px 4px !important;
+  box-shadow: 0 10px 24px -14px var(--shadow);
+}
+.sop-kpiperf.st-sidebar .sop-kp-arrow { display: none; }
+
+.sop-kpiperf.st-elevated { border-color: var(--card-border); box-shadow: 0 18px 34px -16px var(--shadow), 0 3px 8px -4px var(--shadow); }
+
+.sop-kpiperf.st-outline { border-width: 1.5px; border-style: dashed; box-shadow: none; }
+.sop-kpiperf.st-outline .sop-kp-arrow { border-style: dashed; border-width: 1.5px; }
+
+.sop-kpiperf.st-solid { border-color: rgba(255,255,255,.08); box-shadow: 0 10px 22px -12px var(--shadow); }
+.sop-kpiperf.st-solid .sop-kp-arrow { border-color: rgba(255,255,255,.08); }
+
+.sop-kpiperf.st-frost {
+  border-color: transparent; box-shadow: none;
+  backdrop-filter: blur(9px); -webkit-backdrop-filter: blur(9px);
+}
+.sop-kpiperf.st-frost .sop-kp-arrow { border-color: transparent; }
+
+
+/* Selection (cross-filter of other visuals) */
+.sop-node.sel-dimmed { opacity: .45; }
+.sop-node.selected { filter: drop-shadow(0 0 6px var(--accent-b, #3ba7ff)); }
+.sop-hint {
+  position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+  text-align: center; padding: 16px; font: 12px/1.6 "Segoe UI", sans-serif; opacity: .8;
+  pointer-events: none;
+}

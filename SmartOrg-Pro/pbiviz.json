@@ -1,0 +1,25 @@
+{
+  "visual": {
+    "name": "smartOrgPro",
+    "displayName": "Smart Org Pro",
+    "guid": "smartOrgPro8F3A1C9D2B4E4F6A9C1D0E7B5A3F2C81",
+    "visualClassName": "Visual",
+    "version": "2.3.0.0",
+    "description": "Interactive organizational chart with glass hover cards, live KPI performance bars, focus mode and a collapsible hierarchy.",
+    "supportUrl": "https://vistacompany.ir/smart-org-pro/",
+    "gitHubUrl": ""
+  },
+  "apiVersion": "5.10.0",
+  "author": {
+    "name": "Amir Honarmand",
+    "email": "vista.datamining@gmail.com"
+  },
+  "assets": {
+    "icon": "assets/icon.png"
+  },
+  "externalJS": [],
+  "style": "style/visual.less",
+  "capabilities": "capabilities.json",
+  "dependencies": null,
+  "stringResources": []
+}

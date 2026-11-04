@@ -1,0 +1,27 @@
+﻿node_modules/
+.tmp/
+dist/
+webpack.statistics.*.html
+*.pbiviz
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.p12
+*.secret
+*.lic
+
+# IDE and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

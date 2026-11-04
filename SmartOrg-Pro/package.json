@@ -1,0 +1,25 @@
+{
+  "name": "smartorgpro",
+  "version": "2.3.0.0",
+  "description": "Smart Org Pro - Power BI custom visual (org chart with glass hover cards, KPI bars, focus mode, collapsible hierarchy)",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "start": "pbiviz start",
+    "package": "pbiviz package",
+    "lint": "eslint ./src/**/*.ts"
+  },
+  "dependencies": {
+    "@noble/curves": "^1.6.0",
+    "@noble/hashes": "^1.5.0",
+    "d3": "^7.9.0",
+    "powerbi-visuals-api": "5.10.0",
+    "powerbi-visuals-utils-formattingmodel": "^6.2.2"
+  },
+  "devDependencies": {
+    "@types/d3": "^7.4.3",
+    "powerbi-visuals-tools": "^7.1.1",
+    "typescript": "^5.4.5"
+  }
+}

@@ -1,0 +1,968 @@
+{
+  "dataRoles": [
+    {
+      "displayName": "Employee ID",
+      "name": "employeeId",
+      "kind": "Grouping"
+    },
+    {
+      "displayName": "Manager ID",
+      "name": "managerId",
+      "kind": "Grouping"
+    },
+    {
+      "displayName": "Name",
+      "name": "name",
+      "kind": "Grouping"
+    },
+    {
+      "displayName": "Title",
+      "name": "title",
+      "kind": "Grouping"
+    },
+    {
+      "displayName": "Department",
+      "name": "department",
+      "kind": "Grouping"
+    },
+    {
+      "displayName": "Photo URL",
+      "name": "photo",
+      "kind": "Grouping"
+    },
+    {
+      "displayName": "Badge (emoji)",
+      "name": "badge",
+      "kind": "Grouping"
+    },
+    {
+      "displayName": "Performance %",
+      "name": "performance",
+      "kind": "Measure"
+    },
+    {
+      "displayName": "KPI measures",
+      "name": "kpi",
+      "kind": "Measure"
+    },
+    {
+      "displayName": "Data card values",
+      "name": "stat",
+      "kind": "Measure"
+    },
+    {
+      "displayName": "Data card targets",
+      "name": "statTarget",
+      "kind": "Measure"
+    },
+    {
+      "displayName": "Data card previous period",
+      "name": "statPrevious",
+      "kind": "Measure"
+    }
+  ],
+  "dataViewMappings": [
+    {
+      "conditions": [
+        {
+          "employeeId": {
+            "max": 1
+          },
+          "managerId": {
+            "max": 1
+          },
+          "performance": {
+            "max": 1
+          }
+        }
+      ],
+      "table": {
+        "rows": {
+          "select": [
+            {
+              "for": {
+                "in": "employeeId"
+              }
+            },
+            {
+              "for": {
+                "in": "managerId"
+              }
+            },
+            {
+              "for": {
+                "in": "name"
+              }
+            },
+            {
+              "for": {
+                "in": "title"
+              }
+            },
+            {
+              "for": {
+                "in": "department"
+              }
+            },
+            {
+              "for": {
+                "in": "photo"
+              }
+            },
+            {
+              "for": {
+                "in": "badge"
+              }
+            },
+            {
+              "for": {
+                "in": "performance"
+              }
+            },
+            {
+              "for": {
+                "in": "kpi"
+              }
+            },
+            {
+              "for": {
+                "in": "stat"
+              }
+            },
+            {
+              "for": {
+                "in": "statTarget"
+              }
+            },
+            {
+              "for": {
+                "in": "statPrevious"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "objects": {
+    "cardStyleSettings": {
+      "properties": {
+        "style": {
+          "type": {
+            "enumeration": [
+              {
+                "value": "glass",
+                "displayName": "Glass Card (Hover KPI panel)"
+              },
+              {
+                "value": "pill",
+                "displayName": "Pill Card (Photo ribbon)"
+              },
+              {
+                "value": "minimal",
+                "displayName": "Minimal Flat"
+              },
+              {
+                "value": "ribbon",
+                "displayName": "Ribbon Badge"
+              },
+              {
+                "value": "outline",
+                "displayName": "Outline"
+              },
+              {
+                "value": "photoBg",
+                "displayName": "Photo Background"
+              },
+              {
+                "value": "neumorph",
+                "displayName": "Neumorphic"
+              }
+            ]
+          }
+        },
+        "pillPalette": {
+          "type": {
+            "enumeration": [
+              {
+                "value": "vibrant",
+                "displayName": "Vibrant"
+              },
+              {
+                "value": "sunset",
+                "displayName": "Sunset"
+              },
+              {
+                "value": "ocean",
+                "displayName": "Ocean"
+              },
+              {
+                "value": "emerald",
+                "displayName": "Emerald Corporate"
+              },
+              {
+                "value": "monochrome",
+                "displayName": "Monochrome Executive"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "layoutSettings": {
+      "properties": {
+        "layout": {
+          "type": {
+            "enumeration": [
+              {
+                "value": "vertical",
+                "displayName": "Vertical Tree"
+              },
+              {
+                "value": "horizontal",
+                "displayName": "Horizontal Tree"
+              },
+              {
+                "value": "radial",
+                "displayName": "Radial"
+              },
+              {
+                "value": "compact",
+                "displayName": "Compact"
+              }
+            ]
+          }
+        },
+        "cardWidth": {
+          "type": {
+            "numeric": true
+          }
+        },
+        "levelGap": {
+          "type": {
+            "numeric": true
+          }
+        }
+      }
+    },
+    "themeSettings": {
+      "properties": {
+        "theme": {
+          "type": {
+            "enumeration": [
+              {
+                "value": "darkNeon",
+                "displayName": "Dark Neon"
+              },
+              {
+                "value": "corporate",
+                "displayName": "Corporate"
+              },
+              {
+                "value": "finance",
+                "displayName": "Finance"
+              },
+              {
+                "value": "hr",
+                "displayName": "HR"
+              },
+              {
+                "value": "healthcare",
+                "displayName": "Healthcare"
+              },
+              {
+                "value": "appleGlass",
+                "displayName": "Apple Glass"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "connectorSettings": {
+      "properties": {
+        "style": {
+          "type": {
+            "enumeration": [
+              {
+                "value": "elbowDashed",
+                "displayName": "Dashed"
+              },
+              {
+                "value": "straight",
+                "displayName": "Straight"
+              },
+              {
+                "value": "curved",
+                "displayName": "Curved"
+              },
+              {
+                "value": "animatedFlow",
+                "displayName": "Animated Flow"
+              },
+              {
+                "value": "neonGlow",
+                "displayName": "Neon Glow"
+              }
+            ]
+          }
+        },
+        "color": {
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "thickness": {
+          "type": {
+            "numeric": true
+          }
+        }
+      }
+    },
+    "conditionalFormatSettings": {
+      "properties": {
+        "mode": {
+          "type": {
+            "enumeration": [
+              {
+                "value": "single",
+                "displayName": "Single color"
+              },
+              {
+                "value": "twoColor",
+                "displayName": "Two color"
+              },
+              {
+                "value": "threeColor",
+                "displayName": "Three color"
+              }
+            ]
+          }
+        },
+        "colorMin": {
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "colorMid": {
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "colorMax": {
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "progressBarSettings": {
+      "properties": {
+        "style": {
+          "type": {
+            "enumeration": [
+              {
+                "value": "linear",
+                "displayName": "Linear Gradient"
+              },
+              {
+                "value": "neon",
+                "displayName": "Neon Progress"
+              },
+              {
+                "value": "liquid",
+                "displayName": "Liquid Fill"
+              },
+              {
+                "value": "segmented",
+                "displayName": "Segmented"
+              },
+              {
+                "value": "ring",
+                "displayName": "Circular Ring"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "licenseStorageFallback": {
+      "properties": {
+        "trialAnchor": {
+          "type": {
+            "text": true
+          }
+        }
+      }
+    },
+    "licenseSettings": {
+      "properties": {
+        "activationKey": {
+          "type": {
+            "text": true
+          }
+        },
+        "status": {
+          "type": {
+            "text": true
+          }
+        },
+        "deviceCode": {
+          "type": {
+            "text": true
+          }
+        },
+        "customerEmail": {
+          "type": {
+            "text": true
+          }
+        }
+      }
+    },
+    "about": {
+      "properties": {
+        "version": {
+          "type": {
+            "text": true
+          }
+        },
+        "name": {
+          "type": {
+            "text": true
+          }
+        },
+        "visit": {
+          "type": {
+            "text": true
+          }
+        },
+        "privacy": {
+          "type": {
+            "text": true
+          }
+        }
+      }
+    },
+    "dataPointSettings": {
+      "properties": {
+        "slot1": {
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "slot2": {
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "slot3": {
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "slot4": {
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "slot5": {
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "slot6": {
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "slot7": {
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "slot8": {
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "interactionSettings": {
+      "properties": {
+        "focusModeEnabled": {
+          "type": {
+            "bool": true
+          }
+        },
+        "startCollapsedBelowLevel": {
+          "type": {
+            "numeric": true
+          }
+        }
+      }
+    },
+    "zoomSettings": {
+      "properties": {
+        "enabled": {
+          "type": {
+            "bool": true
+          }
+        },
+        "showControls": {
+          "type": {
+            "bool": true
+          }
+        },
+        "defaultZoom": {
+          "type": {
+            "numeric": true
+          }
+        },
+        "minZoom": {
+          "type": {
+            "numeric": true
+          }
+        },
+        "maxZoom": {
+          "type": {
+            "numeric": true
+          }
+        }
+      }
+    },
+    "legendSettings": {
+      "properties": {
+        "show": {
+          "type": {
+            "bool": true
+          }
+        },
+        "position": {
+          "type": {
+            "enumeration": [
+              {
+                "value": "right",
+                "displayName": "Right"
+              },
+              {
+                "value": "left",
+                "displayName": "Left"
+              },
+              {
+                "value": "top",
+                "displayName": "Top"
+              },
+              {
+                "value": "bottom",
+                "displayName": "Bottom"
+              },
+              {
+                "value": "hidden",
+                "displayName": "Hidden (don't show)"
+              }
+            ]
+          }
+        },
+        "title": {
+          "type": {
+            "text": true
+          }
+        },
+        "fontSize": {
+          "type": {
+            "numeric": true
+          }
+        },
+        "panelWidth": {
+          "type": {
+            "numeric": true
+          }
+        },
+        "textColor": {
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "kpiPerfSettings": {
+      "properties": {
+        "enabled": {
+          "type": {
+            "bool": true
+          }
+        },
+        "containerStyle": {
+          "type": {
+            "enumeration": [
+              {
+                "value": "glass",
+                "displayName": "Glass"
+              },
+              {
+                "value": "neon",
+                "displayName": "Neon"
+              },
+              {
+                "value": "gradient",
+                "displayName": "Gradient"
+              },
+              {
+                "value": "sidebar",
+                "displayName": "Sidebar"
+              },
+              {
+                "value": "elevated",
+                "displayName": "Elevated"
+              },
+              {
+                "value": "outline",
+                "displayName": "Outline"
+              },
+              {
+                "value": "solid",
+                "displayName": "Solid"
+              },
+              {
+                "value": "frost",
+                "displayName": "Frost"
+              }
+            ]
+          }
+        },
+        "progressStyle": {
+          "type": {
+            "enumeration": [
+              {
+                "value": "classic",
+                "displayName": "Classic"
+              },
+              {
+                "value": "segmented",
+                "displayName": "Segmented"
+              },
+              {
+                "value": "marker",
+                "displayName": "Target Marker"
+              },
+              {
+                "value": "gradient",
+                "displayName": "Gradient"
+              }
+            ]
+          }
+        },
+        "progressHeight": {
+          "type": {
+            "numeric": true
+          }
+        },
+        "tooltipEnabled": {
+          "type": {
+            "bool": true
+          }
+        },
+        "tooltipStyle": {
+          "type": {
+            "enumeration": [
+              {
+                "value": "minimal",
+                "displayName": "Minimal"
+              },
+              {
+                "value": "executive",
+                "displayName": "Executive Card"
+              },
+              {
+                "value": "modernDark",
+                "displayName": "Modern Dark"
+              },
+              {
+                "value": "glass",
+                "displayName": "Glass / Premium"
+              },
+              {
+                "value": "detailed",
+                "displayName": "Detailed Analytics"
+              }
+            ]
+          }
+        },
+        "tooltipBackground": {
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "tooltipTextColor": {
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "tooltipFontSize": {
+          "type": {
+            "numeric": true
+          }
+        },
+        "fontSize": {
+          "type": {
+            "numeric": true
+          }
+        },
+        "decimals": {
+          "type": {
+            "numeric": true
+          }
+        },
+        "compact": {
+          "type": {
+            "bool": true
+          }
+        },
+        "cornerRadius": {
+          "type": {
+            "numeric": true
+          }
+        },
+        "opacity": {
+          "type": {
+            "numeric": true
+          }
+        },
+        "background": {
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "labelColor": {
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "valueColor": {
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "greenThreshold": {
+          "type": {
+            "numeric": true
+          }
+        },
+        "yellowThreshold": {
+          "type": {
+            "numeric": true
+          }
+        },
+        "colorGreen": {
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "colorYellow": {
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "colorRed": {
+          "type": {
+            "fill": {
+              "solid": {
+                "color": true
+              }
+            }
+          }
+        },
+        "kpiVis1": {
+          "type": {
+            "bool": true
+          }
+        },
+        "kpiVis2": {
+          "type": {
+            "bool": true
+          }
+        },
+        "kpiVis3": {
+          "type": {
+            "bool": true
+          }
+        },
+        "kpiVis4": {
+          "type": {
+            "bool": true
+          }
+        },
+        "kpiVis5": {
+          "type": {
+            "bool": true
+          }
+        },
+        "kpiVis6": {
+          "type": {
+            "bool": true
+          }
+        },
+        "kpiVis7": {
+          "type": {
+            "bool": true
+          }
+        },
+        "kpiVis8": {
+          "type": {
+            "bool": true
+          }
+        },
+        "kpiDir1": {
+          "type": {
+            "bool": true
+          }
+        },
+        "kpiDir2": {
+          "type": {
+            "bool": true
+          }
+        },
+        "kpiDir3": {
+          "type": {
+            "bool": true
+          }
+        },
+        "kpiDir4": {
+          "type": {
+            "bool": true
+          }
+        },
+        "kpiDir5": {
+          "type": {
+            "bool": true
+          }
+        },
+        "kpiDir6": {
+          "type": {
+            "bool": true
+          }
+        },
+        "kpiDir7": {
+          "type": {
+            "bool": true
+          }
+        },
+        "kpiDir8": {
+          "type": {
+            "bool": true
+          }
+        },
+        "target1": {
+          "type": {
+            "numeric": true
+          }
+        },
+        "target2": {
+          "type": {
+            "numeric": true
+          }
+        },
+        "target3": {
+          "type": {
+            "numeric": true
+          }
+        },
+        "target4": {
+          "type": {
+            "numeric": true
+          }
+        }
+      }
+    },
+    "general": {
+      "properties": {
+        "filter": {
+          "type": {
+            "filter": true
+          }
+        }
+      }
+    }
+  },
+  "privileges": []
+}
