@@ -374,27 +374,6 @@ public key — never needs to phone home.
 
 ### One-time setup
 
-```bash
-cd License-Generator
-node generate-license.mjs --init
-```
-
-Paste the printed public key into `src/License/publicKey.ts`, replacing the
-placeholder, then rebuild. Keep the generated `private-key.json` off any
-machine/repo you don't fully control — anyone with it can mint valid
-licenses for any tier, forever. Full usage (including the `--device` lock
-option and its "don't use this for a shared Report Server report" caveat)
-is documented in `License-Generator/README.md`.
-
-### Issuing a license
-
-```bash
-node generate-license.mjs --tier=pro     --period=monthly   --email=customer@example.com
-node generate-license.mjs --tier=pro     --period=daily     --email=customer@example.com --days=7
-node generate-license.mjs --tier=premium --period=yearly    --email=customer@example.com
-node generate-license.mjs --tier=premium --period=unlimited --email=customer@example.com
-```
-
 Prints a `base64url(payload).base64url(signature)` string — send that to the
 customer. They paste it into Format → License → **Activation key**, and type
 the **same email** into **Customer email**. Both must match exactly (case-
